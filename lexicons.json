@@ -1,7 +1,7 @@
 {
   "lexicons": [
     {
-      "id": "com.rpg.characteristic",
+      "id": "com.jason-edelman.void-chronicle.characteristic",
       "defs": {
         "main": {
           "type": "record",
@@ -59,7 +59,7 @@
       }
     },
     {
-      "id": "com.rpg.chapter",
+      "id": "com.jason-edelman.void-chronicle.chapter",
       "defs": {
         "main": {
           "type": "record",

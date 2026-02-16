@@ -278,7 +278,7 @@ async function handleCreateCharacteristic(e) {
 
         // Create characteristic record
         const record = {
-            $type: 'com.rpg.characteristic',
+            $type: 'com.jason-edelman.void-chronicle.characteristic',
             verb: verb,
             targetPost: {
                 uri: postUri,
@@ -292,7 +292,7 @@ async function handleCreateCharacteristic(e) {
         // Create record via AT Protocol
         const result = await agent.com.atproto.repo.createRecord({
             repo: agent.session.did,
-            collection: 'com.rpg.characteristic',
+            collection: 'com.jason-edelman.void-chronicle.characteristic',
             record: record,
         });
 

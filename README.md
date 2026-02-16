@@ -9,9 +9,9 @@ Void Chronicle is a collaborative storytelling RPG built on Bluesky using AT Pro
 ## Features (P0 MVP)
 
 - ✅ Characteristic Creation (gift, thank, applaud, witness verbs)
-- ✅ Characteristic Record Lexicon (com.rpg.characteristic)
+- ✅ Characteristic Record Lexicon (com.jason-edelman.void-chronicle.characteristic)
 - 🚧 Chapter Creation (with narrative summaries)
-- 🚧 Chapter Record Lexicon (com.rpg.chapter)
+- 🚧 Chapter Record Lexicon (com.jason-edelman.void-chronicle.chapter)
 - 🚧 Chronicle View (chronological events from network)
 - 🚧 Character Sheet View (quests, actions, chapters per DID)
 - 🚧 Quest Special Handling (completion, release requests)
@@ -83,7 +83,7 @@ npm start
 
 ## Lexicons
 
-### com.rpg.characteristic
+### com.jason-edelman.void-chronicle.characteristic
 
 A characteristic record representing a positive interaction with another Bluesky post.
 
@@ -100,7 +100,7 @@ A characteristic record representing a positive interaction with another Bluesky
 }
 ```
 
-### com.rpg.chapter
+### com.jason-edelman.void-chronicle.chapter
 
 A chapter record aggregating characteristics with narrative summaries.
 
