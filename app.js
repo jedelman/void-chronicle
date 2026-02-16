@@ -36,7 +36,7 @@ async function init() {
             await agent.resumeSession(sessionData);
 
             // Fetch user profile
-            currentUser = await agent.getProfile({ actor: sessionData.did });
+            currentUser = await agent.getProfile({ actor: agent.session.did });
 
             // Update UI
             showMainApp();
@@ -64,6 +64,8 @@ async function handleLogin(e) {
     const handle = document.getElementById('handle').value;
     const appPassword = document.getElementById('app-password').value;
 
+    console.log('Login attempt for handle:', handle);
+
     try {
         // Show loading state
         const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -76,14 +78,20 @@ async function handleLogin(e) {
             service: 'https://bsky.social'
         });
 
+        console.log('Agent created, attempting login...');
+
         // Login with app password
         const session = await agent.login({
             identifier: handle,
             password: appPassword,
         });
 
+        console.log('Login successful, session:', session);
+
         // Fetch user profile
-        currentUser = await agent.getProfile({ actor: session.did });
+        currentUser = await agent.getProfile({ actor: agent.session.did });
+
+        console.log('Profile fetched:', currentUser);
 
         // Store session
         localStorage.setItem('void_session', JSON.stringify({
@@ -91,6 +99,8 @@ async function handleLogin(e) {
             accessJwt: session.accessJwt,
             refreshJwt: session.refreshJwt,
         }));
+
+        console.log('Session stored, showing main app...');
 
         // Show main app
         showMainApp();
@@ -106,12 +116,13 @@ async function handleLogin(e) {
 }
 
 // Add login form listener
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-});
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+    loginForm.addEventListener('submit', handleLogin);
+}
+
+// Initialize app
+init();
 
 // Show main application
 function showMainApp() {
@@ -197,24 +208,23 @@ async function updateCharacteristicPreview() {
             if (match) {
                 const [, handle, postRkey] = match;
 
-                // Resolve handle to DID
-                const resolveResponse = await fetch(`https://bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${handle}`);
-                const resolveData = await resolveResponse.json();
-                if (resolveData.did) {
+                // Resolve handle to DID using agent
+                const didResponse = await agent.resolveHandle({ handle: handle });
+                if (didResponse.data.did) {
                     targetDid = handle;
 
-                    // Fetch post
-                    const postUri = `at://${resolveData.did}/app.bsky.feed.post/${postRkey}`;
-                    const postResponse = await fetch(`https://bsky.app/xrpc/app.bsky.feed.getPosts?uris=${postUri}`);
-                    const postData = await postResponse.json();
+                    // Fetch post using agent
+                    const postUri = `at://${didResponse.data.did}/app.bsky.feed.post/${postRkey}`;
+                    const postsResponse = await agent.getPosts({ uris: [postUri] });
 
-                    if (postData.posts && postData.posts.length > 0) {
-                        postText = postData.posts[0].record?.text || 'Post text not available';
+                    if (postsResponse.data.posts && postsResponse.data.posts.length > 0) {
+                        postText = postsResponse.data.posts[0].record?.text || 'Post text not available';
                     }
                 }
             }
         } catch (error) {
             console.error('Error resolving post:', error);
+            postText = 'Unable to load post';
         }
 
         previewContent.innerHTML = `
@@ -245,26 +255,23 @@ async function handleCreateCharacteristic(e) {
 
         const [, handle, postRkey] = match;
 
-        // Resolve handle to DID
-        const resolveResponse = await fetch(`https://bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${handle}`);
-        const resolveData = await resolveResponse.json();
-
-        if (!resolveData.did) {
+        // Resolve handle to DID using agent
+        const didResponse = await agent.resolveHandle({ handle: handle });
+        if (!didResponse.data.did) {
             throw new Error('Failed to resolve handle');
         }
 
-        const targetDid = resolveData.did;
+        const targetDid = didResponse.data.did;
         const postUri = `at://${targetDid}/app.bsky.feed.post/${postRkey}`;
 
-        // Fetch post to get CID
-        const postResponse = await fetch(`https://bsky.app/xrpc/app.bsky.feed.getPosts?uris=${postUri}`);
-        const postData = await postResponse.json();
+        // Fetch post to get CID using agent
+        const postsResponse = await agent.getPosts({ uris: [postUri] });
 
-        if (!postData.posts || postData.posts.length === 0) {
+        if (!postsResponse.data.posts || postsResponse.data.posts.length === 0) {
             throw new Error('Post not found');
         }
 
-        const postCid = postData.posts[0].cid;
+        const postCid = postsResponse.data.posts[0].cid;
 
         // Create characteristic record
         const record = {
@@ -325,6 +332,3 @@ function showCharacterSheet() {
         <div class="loading">Coming soon...</div>
     `;
 }
-
-// Initialize app
-init();
