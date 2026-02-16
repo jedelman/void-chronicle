@@ -203,10 +203,20 @@ async function updateCharacteristicPreview() {
         let postText = 'Loading post...';
 
         try {
-            // Parse URL
+            // Parse URL - validate format first
             const match = postUrl.match(/https:\/\/bsky\.app\/profile\/([^/]+)\/post\/([^/]+)/);
             if (match) {
                 const [, handle, postRkey] = match;
+
+                // Validate handle format
+                if (!handle || !handle.includes('.')) {
+                    throw new Error('Invalid handle format');
+                }
+
+                // Validate postRkey is not empty
+                if (!postRkey || postRkey.length === 0) {
+                    throw new Error('Invalid post reference');
+                }
 
                 // Resolve handle to DID using agent
                 const didResponse = await agent.resolveHandle({ handle: handle });
@@ -221,16 +231,18 @@ async function updateCharacteristicPreview() {
                         postText = postsResponse.data.posts[0].record?.text || 'Post text not available';
                     }
                 }
+            } else {
+                postText = 'Waiting for valid post URL...';
             }
         } catch (error) {
             console.error('Error resolving post:', error);
-            postText = 'Unable to load post';
+            postText = 'Unable to load post: ' + error.message;
         }
 
         previewContent.innerHTML = `
             <p><strong>Verb:</strong> ${verb}</p>
             <p><strong>Target:</strong> ${targetDid}</p>
-            <p><strong>Post:</strong> ${postText.substring(0, 100)}...</p>
+            <p><strong>Post:</strong> ${postText.substring(0, 100)}${postText.length > 100 ? '...' : ''}</p>
             ${note ? `<p><strong>Note:</strong> ${note}</p>` : ''}
         `;
     } else {
