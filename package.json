@@ -1,0 +1,25 @@
+{
+  "name": "void-chronicle",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Bluesky RPG Chronicle - collaborative storytelling on Bluesky using AT Protocol records",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --dev"
+  },
+  "keywords": [
+    "bluesky",
+    "atproto",
+    "rpg",
+    "collaborative-storytelling"
+  ],
+  "author": "Jason Edelman",
+  "license": "MIT",
+  "dependencies": {
+    "@atproto/api": "^0.18.21"
+  },
+  "devDependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "lexicons": [
+    {
+      "id": "com.rpg.characteristic",
+      "defs": {
+        "main": {
+          "type": "record",
+          "description": "A characteristic record representing a positive interaction with another Bluesky post",
+          "key": "tid",
+          "record": {
+            "type": "object",
+            "required": [
+              "verb",
+              "targetPost",
+              "targetDid",
+              "createdAt"
+            ],
+            "properties": {
+              "verb": {
+                "type": "string",
+                "knownValues": [
+                  "gift",
+                  "thank",
+                  "applaud",
+                  "witness"
+                ],
+                "description": "The type of characteristic"
+              },
+              "targetPost": {
+                "type": "object",
+                "required": ["uri", "cid"],
+                "properties": {
+                  "uri": {
+                    "type": "string",
+                    "format": "at-uri"
+                  },
+                  "cid": {
+                    "type": "string",
+                    "format": "cid"
+                  }
+                }
+              },
+              "targetDid": {
+                "type": "string",
+                "format": "did"
+              },
+              "note": {
+                "type": "string",
+                "maxLength": 500,
+                "description": "Optional contextual note about this characteristic"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "datetime"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "com.rpg.chapter",
+      "defs": {
+        "main": {
+          "type": "record",
+          "description": "A chapter record aggregating characteristics with narrative summaries",
+          "key": "tid",
+          "record": {
+            "type": "object",
+            "required": [
+              "title",
+              "summary",
+              "characteristics",
+              "createdAt"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Chapter title"
+              },
+              "summary": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Narrative summary of the chapter"
+              },
+              "characteristics": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "at-uri"
+                },
+                "description": "URIs of characteristics referenced in this chapter"
+              },
+              "isQuest": {
+                "type": "boolean",
+                "description": "Whether this chapter is a quest record"
+              },
+              "questor": {
+                "type": "object",
+                "required": ["did", "handle"],
+                "properties": {
+                  "did": {
+                    "type": "string",
+                    "format": "did"
+                  },
+                  "handle": {
+                    "type": "string",
+                    "format": "handle"
+                  }
+                },
+                "description": "The questor (required if isQuest=true)"
+              },
+              "questGiver": {
+                "type": "object",
+                "required": ["did", "handle"],
+                "properties": {
+                  "did": {
+                    "type": "string",
+                    "format": "did"
+                  },
+                  "handle": {
+                    "type": "string",
+                    "format": "handle"
+                  }
+                },
+                "description": "The quest-giver (required if isQuest=true)"
+              },
+              "questReleaseRequested": {
+                "type": "boolean",
+                "description": "Whether the questor has requested release from the quest"
+              },
+              "completedAt": {
+                "type": "string",
+                "format": "datetime",
+                "description": "Timestamp when quest was completed (set by questGiver)"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "datetime"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
