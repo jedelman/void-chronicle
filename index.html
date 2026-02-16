@@ -159,7 +159,24 @@
 
         <!-- Login Section -->
         <div id="login-section">
-            <a href="/auth" class="login-btn">Login with Bluesky</a>
+            <form id="login-form" style="max-width: 400px; margin: 0 auto; text-align: left;">
+                <div style="margin-bottom: 20px;">
+                    <label for="handle" style="display: block; margin-bottom: 8px; font-size: 0.9rem;">Bluesky Handle:</label>
+                    <input type="text" id="handle" placeholder="@handle.bsky.social" required
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #e0e0e0; font-size: 1rem;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="app-password" style="display: block; margin-bottom: 8px; font-size: 0.9rem;">App Password:</label>
+                    <input type="password" id="app-password" placeholder="xxxx-xxxx-xxxx-xxxx" required
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #e0e0e0; font-size: 1rem;">
+                    <p style="font-size: 0.8rem; color: #a0a0a0; margin-top: 8px;">
+                        Create an app password at <a href="https://bsky.app/settings/app-passwords" target="_blank" style="color: #00d4ff;">bsky.app/settings/app-passwords</a>
+                    </p>
+                </div>
+
+                <button type="submit" class="login-btn" style="width: 100%;">Login</button>
+            </form>
         </div>
 
         <!-- Main Application -->

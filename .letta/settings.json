@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(**)",
+      "Bash(git add:*)",
+      "TaskOutput"
+    ]
+  }
+}

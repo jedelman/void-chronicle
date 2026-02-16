@@ -47,73 +47,7 @@ async function init() {
             showLogin();
         }
     } else {
-        // Check for OAuth callback
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-
-        if (code) {
-            // Handle OAuth callback
-            handleOAuthCallback(code);
-        } else {
-            showLogin();
-        }
-    }
-}
-
-// Handle OAuth callback
-async function handleOAuthCallback(code) {
-    try {
-        contentArea.innerHTML = '<div class="loading">Authenticating...</div>';
-
-        // Exchange code for tokens
-        const response = await fetch('/api/auth/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code }),
-        });
-
-        const tokens = await response.json();
-
-        if (tokens.error) {
-            throw new Error(tokens.error_description || tokens.error);
-        }
-
-        // Create agent with tokens
-        agent = new BskyAgent({
-            service: 'https://bsky.social'
-        });
-
-        // Create session with access token
-        await agent.createSession({
-            identifier: 'temp', // Will be overwritten by OAuth
-            password: 'temp',
-        });
-
-        // Actually, for OAuth we need to use the refresh token properly
-        // For now, let's use a simpler approach - store the tokens and refresh when needed
-
-        // Clear URL params
-        window.history.replaceState({}, document.title, window.location.pathname);
-
-        // Fetch user profile
-        currentUser = await agent.getProfile({ actor: tokens.did });
-
-        // Store session
-        const sessionData = {
-            did: tokens.did,
-            accessJwt: tokens.access_token,
-            refreshJwt: tokens.refresh_token,
-        };
-        localStorage.setItem('void_session', JSON.stringify(sessionData));
-
-        // Show main app
-        showMainApp();
-    } catch (error) {
-        console.error('OAuth error:', error);
-        contentArea.innerHTML = `<div class="error">Authentication failed: ${error.message}</div>`;
-        setTimeout(showLogin, 3000);
+        showLogin();
     }
 }
 
@@ -122,6 +56,62 @@ function showLogin() {
     loginSection.style.display = 'block';
     mainApp.style.display = 'none';
 }
+
+// Handle login form submission
+async function handleLogin(e) {
+    e.preventDefault();
+
+    const handle = document.getElementById('handle').value;
+    const appPassword = document.getElementById('app-password').value;
+
+    try {
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Logging in...';
+        submitBtn.disabled = true;
+
+        // Create agent
+        agent = new BskyAgent({
+            service: 'https://bsky.social'
+        });
+
+        // Login with app password
+        const session = await agent.login({
+            identifier: handle,
+            password: appPassword,
+        });
+
+        // Fetch user profile
+        currentUser = await agent.getProfile({ actor: session.did });
+
+        // Store session
+        localStorage.setItem('void_session', JSON.stringify({
+            did: session.did,
+            accessJwt: session.accessJwt,
+            refreshJwt: session.refreshJwt,
+        }));
+
+        // Show main app
+        showMainApp();
+    } catch (error) {
+        console.error('Login error:', error);
+        alert(`Login failed: ${error.message}`);
+
+        // Reset button
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Login';
+        submitBtn.disabled = false;
+    }
+}
+
+// Add login form listener
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+});
 
 // Show main application
 function showMainApp() {
