@@ -157,6 +157,184 @@
             padding: 15px;
             margin: 20px 0;
         }
+
+        /* Character Sheet Styles */
+        .stat-card {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .characteristic-card {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 3px solid #00d4ff;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .characteristic-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .verb-icon {
+            font-size: 1.5rem;
+        }
+
+        .post-preview {
+            color: #e0e0e0;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            font-style: italic;
+        }
+
+        .characteristic-note {
+            color: #e0e0e0;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .view-post-link {
+            color: #00d4ff;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .view-post-link:hover {
+            color: #00ff88;
+            text-decoration: underline;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .section-header {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-dashboard {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        /* Chronicle Timeline Styles */
+        .chronicle-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #00d4ff, #7b2cbf);
+        }
+
+        .chronicle-event {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 30px;
+        }
+
+        .chronicle-icon {
+            position: absolute;
+            left: 11px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .chronicle-content {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .event-label {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .event-timestamp {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin-bottom: 8px;
+        }
+
+        .event-note {
+            color: #e0e0e0;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .scroll-sentinel {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+        }
     </style>
 </head>
 <body>
